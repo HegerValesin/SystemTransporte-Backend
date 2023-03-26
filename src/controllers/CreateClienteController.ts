@@ -146,7 +146,11 @@ export class CreateClienteController {
     }
     //busca tudo
     if (id == "" && nome == "" && fone == "") {
-      const cliente = await prismaClient.clientes.findMany();
+      const cliente = await prismaClient.clientes.findMany({
+        include: {
+          contatos: true
+      },
+      });
       return response.json(cliente);
     }
   }
@@ -197,7 +201,7 @@ export class CreateClienteController {
       });
       return response
         .status(204)
-        .send({ confirm: "Cliente excluido com sucesso" });
+        .send({ confirm: "Contato excluido com sucesso" });
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
@@ -209,4 +213,26 @@ export class CreateClienteController {
       }
     }
   }
+
+
+async editContatos(request: Request, response: Response) {
+  const { id, nome, fonecel } = request.body;
+
+  try {
+    const contatos = await prismaClient.contatos.update({
+      where: { id: Number(id) },
+      data: { contato: String(nome), fonecel },
+    });
+    return response.json(contatos);
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return response.status(404).json({ error: "User not found" });
+    } else {
+      throw error;
+    }
+  }
+}
 }

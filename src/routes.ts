@@ -23,6 +23,7 @@ router.post('/clientefilter', createClientes.getUserByAll);
 //contatos
 router.post("/newcontatos", createClientes.addContatos);
 router.delete('/delcontatos/', createClientes.delContatos);
+router.put('/editcontatos/', createClientes.editContatos);
 
 
 
